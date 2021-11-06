@@ -29,27 +29,22 @@ public class Controller {
     }
 
     @RequestMapping(value = "/iot/knocksensor", method = GET)
-    @GetMapping
     public StatusMessage showStatus() {
         return new StatusMessage("OK", 200);
     }
 
 
     @RequestMapping(value = "/iot/knocksensor", method = POST)
-    @PostMapping
     public StatusMessage receiveSensorValue(@RequestBody String sensorValue) {
         String[] tokens = sensorValue.split("=");
 
         logger.info("received value from sensor: " + tokens[tokens.length - 1]);
-        for (String client : clients) {
-            String result = new RestTemplate().getForObject(HTTP + client + PORT + APP_PATH, String.class);
-        }
+        isKnocked = true;
 
         return new StatusMessage("Accepted", 202);
     }
 
     @RequestMapping(value = "/iot/knocklistener", method = GET)
-    @GetMapping
     public StatusMessage checkKnock() {
         if (isKnocked) {
             isKnocked = false;
