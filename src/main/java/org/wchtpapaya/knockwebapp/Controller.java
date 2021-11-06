@@ -3,7 +3,6 @@ package org.wchtpapaya.knockwebapp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,14 +17,12 @@ public class Controller {
     private static final String HTTP = "http://";
     private static final String APP_PATH = "iot/knock";
 
-    final private Logger logger = LoggerFactory.getLogger(Controller.class);
+    private final Logger logger = LoggerFactory.getLogger(Controller.class);
     private boolean isKnocked = false;
+    private final  DataLogger dataLogger;
 
-    final private List<String> clients;
-
-    public Controller() {
-        clients = new LinkedList<>();
-        clients.add("192.168.1.66");
+    public Controller(DataLogger dataLogger) {
+        this.dataLogger = dataLogger;
     }
 
     @RequestMapping(value = "/iot/knocksensor", method = GET)
@@ -38,8 +35,10 @@ public class Controller {
     public StatusMessage receiveSensorValue(@RequestBody String sensorValue) {
         String[] tokens = sensorValue.split("=");
 
-        logger.info("received value from sensor: " + tokens[tokens.length - 1]);
+        String receivedValue = tokens[tokens.length - 1];
+        logger.info("received value from sensor: " + receivedValue);
         isKnocked = true;
+        dataLogger.log(receivedValue);
 
         return new StatusMessage("Accepted", 202);
     }
