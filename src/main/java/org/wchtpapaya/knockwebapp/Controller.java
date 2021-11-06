@@ -4,9 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -26,13 +23,13 @@ public class Controller {
     }
 
     @RequestMapping(value = "/iot/knocksensor", method = GET)
-    public StatusMessage showStatus() {
+    public Message showStatus() {
         return new StatusMessage("OK", 200);
     }
 
 
     @RequestMapping(value = "/iot/knocksensor", method = POST)
-    public StatusMessage receiveSensorValue(@RequestBody String sensorValue) {
+    public Message receiveSensorValue(@RequestBody String sensorValue) {
         String[] tokens = sensorValue.split("=");
 
         String receivedValue = tokens[tokens.length - 1];
@@ -40,11 +37,11 @@ public class Controller {
         isKnocked = true;
         dataLogger.log(receivedValue);
 
-        return new StatusMessage("Accepted", 202);
+        return new SensorValueMessage(20);
     }
 
     @RequestMapping(value = "/iot/knocklistener", method = GET)
-    public StatusMessage checkKnock() {
+    public Message checkKnock() {
         if (isKnocked) {
             isKnocked = false;
             return new StatusMessage("Accepted", 202);

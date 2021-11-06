@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-public class StatusMessage {
+public class StatusMessage implements Message{
     private final String statusName;
     private final int statusCode;
 
