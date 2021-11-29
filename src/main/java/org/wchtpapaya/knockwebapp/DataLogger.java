@@ -1,5 +1,6 @@
 package org.wchtpapaya.knockwebapp;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -9,9 +10,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
+@Slf4j
 @Component
 public class DataLogger {
-    private final Logger logger = LoggerFactory.getLogger(DataLogger.class);
 
     private final File file;
 
@@ -29,7 +30,7 @@ public class DataLogger {
         try {
             Files.writeString(file.toPath(), message + System.lineSeparator(), StandardOpenOption.APPEND);
         } catch (IOException e) {
-            logger.error("Can`t open DataLog file to write incoming data");
+            log.error("Can`t open DataLog file to write incoming data");
         }
     }
 
@@ -39,7 +40,7 @@ public class DataLogger {
                 file.createNewFile();
             }
         } catch (IOException e) {
-            logger.error("Can`t create DataLog file");
+            log.error("Can`t create DataLog file");
         }
     }
 }
